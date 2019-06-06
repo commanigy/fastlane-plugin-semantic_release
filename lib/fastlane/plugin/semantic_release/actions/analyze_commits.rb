@@ -74,6 +74,7 @@ module Fastlane
 
         UI.message("Found #{splitted.length} commits since last release")
         releases = params[:releases]
+        pattern = params[:pattern]
 
         splitted.each do |line|
           # conventional commits are in format
@@ -81,7 +82,8 @@ module Fastlane
           commit = Helper::SemanticReleaseHelper.parse_commit(
             commit_subject: line.split("|")[0],
             commit_body: line.split("|")[1],
-            releases: releases
+            releases: releases,
+            pattern: pattern
           )
 
           if commit[:release] == "major" || commit[:is_breaking_change]
@@ -149,6 +151,11 @@ module Fastlane
             description: "Map types of commit to release (major, minor, patch)",
             default_value: { fix: "patch", feat: "minor" },
             type: Hash
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :pattern,
+            description: "Regular expression for parsing commits",
+            default_value: '/^(docs|fix|feat|chore|style|refactor|perf|test)(\((.*)\))?(!?)\: (.*)/'
           ),
           FastlaneCore::ConfigItem.new(
             key: :tag_version_match,

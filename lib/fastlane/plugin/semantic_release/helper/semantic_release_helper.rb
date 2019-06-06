@@ -17,7 +17,7 @@ module Fastlane
         commit_subject = params[:commit_subject].strip
         commit_body = params[:commit_body]
         releases = params[:releases]
-        pattern = /^(docs|fix|feat|chore|style|refactor|perf|test)(\((.*)\))?(!?)\: (.*)/
+        pattern = Regexp.new(params[:pattern] || '/^(docs|fix|feat|chore|style|refactor|perf|test)(\((.*)\))?(!?)\: (.*)/')
         breaking_change_pattern = /BREAKING CHANGES?: (.*)/
 
         matched = commit_subject.match(pattern)
